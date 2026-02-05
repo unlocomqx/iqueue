@@ -77,7 +77,7 @@
         {/each}
       </ul>
     {:else}
-      <p class="text-base-content/60 text-sm">No items in queue</p>
+      <p class="text-base-content/60 text-sm">Share YouTube links to this app to add videos to the queue</p>
     {/if}
 
     {#if queue.value.length > 0}
