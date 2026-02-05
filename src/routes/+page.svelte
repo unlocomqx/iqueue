@@ -3,6 +3,7 @@
   import Icon from "@iconify/svelte"
   import {active_alerts, Alerts} from "$lib/store/alerts"
   import {toast} from "svelte-sonner"
+  import {onMount} from "svelte"
 
   function removeItem(index: number) {
     queue.value = queue.value.filter((_, i) => i !== index)
@@ -23,6 +24,12 @@
       toast.error('Notification permission denied')
     }
   }
+
+  onMount(() => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      active_alerts.value[Alerts.NOTIFICATIONS] = false
+    }
+  })
 </script>
 
 <div class="card card-dash bg-base-100 w-96 shadow-sm m-auto mt-10">
