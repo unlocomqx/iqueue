@@ -27,7 +27,17 @@ self.addEventListener('install', (event) => {
   // Create a new cache and add all files to it
   async function addFilesToCache() {
     const cache = await caches.open(CACHE);
-    await cache.addAll(ASSETS);
+
+    // Add files individually to handle failures gracefully
+    await Promise.all(
+      ASSETS.map(async (asset) => {
+        try {
+          await cache.add(asset);
+        } catch (err) {
+          console.warn(`Failed to cache ${asset}:`, err);
+        }
+      })
+    );
   }
 
   event.waitUntil(addFilesToCache());
