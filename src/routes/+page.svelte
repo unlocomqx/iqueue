@@ -22,14 +22,30 @@
       toast.success('Notifications enabled')
     } else if (permission === 'denied') {
       toast.error('Notification permission denied')
+    } else {
+      toast.info('Notification permission needed')
     }
   }
 
   onMount(() => {
-    if ('Notification' in window && Notification.permission === 'granted') {
-      active_alerts.value[Alerts.NOTIFICATIONS] = false
-    }
+    active_alerts.value[Alerts.NOTIFICATIONS] = !('Notification' in window && Notification.permission === 'granted');
   })
+
+  async function showNotification(index: number) {
+    if (Notification.permission !== 'granted') return
+
+    const nextVideo = queue.value[index + 1]
+    if (!nextVideo) return
+
+    const registration = await navigator.serviceWorker.ready
+    await registration.showNotification('Next video', {
+      body: nextVideo.title || nextVideo.url,
+      icon: '/favicon.png',
+      tag: 'next-video',
+      requireInteraction: true,
+      data: { url: nextVideo.url }
+    })
+  }
 </script>
 
 <div class="card card-dash bg-base-100 w-96 shadow-sm m-auto mt-10">
@@ -49,7 +65,8 @@
             <div class="truncate">
               {item.title || item.url}
             </div>
-            <a href={item.url} target="_blank" rel="noopener noreferrer" class="btn btn-square btn-ghost">
+            <a onclick={() => showNotification(index)} href={item.url} target="_blank" rel="noopener noreferrer"
+               class="btn btn-square btn-ghost">
               <Icon icon="ic:baseline-play-arrow"/>
             </a>
             <button class="btn btn-square btn-ghost" onclick={() => removeItem(index)}>

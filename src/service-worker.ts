@@ -92,3 +92,13 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(respond());
 });
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.notification.data?.url) {
+    event.waitUntil(
+      self.clients.openWindow(event.notification.data.url)
+    );
+  }
+});
