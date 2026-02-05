@@ -80,11 +80,10 @@
   <div class="card-body">
     <h2 class="card-title">Videos list</h2>
 
+    <p class="text-base-content/60 text-sm">Share YouTube links to this app to add videos to the queue</p>
+
     {#if queue.value.length > 0}
       <ul class="list bg-base-100 rounded-box shadow-md">
-
-        <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Videos added to the queue</li>
-
         {#each queue.value as item, index (item.url)}
           <li class="list-row items-center">
             <div>
@@ -103,8 +102,6 @@
           </li>
         {/each}
       </ul>
-    {:else}
-      <p class="text-base-content/60 text-sm">Share YouTube links to this app to add videos to the queue</p>
     {/if}
 
     {#if queue.value.length > 0}
