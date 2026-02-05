@@ -2,9 +2,26 @@
   import {queue} from "$lib/store/queue"
   import Icon from "@iconify/svelte"
   import {active_alerts, Alerts} from "$lib/store/alerts"
+  import {toast} from "svelte-sonner"
 
   function removeItem(index: number) {
     queue.value = queue.value.filter((_, i) => i !== index)
+  }
+
+  async function enableNotifications() {
+    if (!('Notification' in window)) {
+      toast.error('Notifications not supported')
+      return
+    }
+
+    const permission = await Notification.requestPermission()
+
+    if (permission === 'granted') {
+      active_alerts.value[Alerts.NOTIFICATIONS] = false
+      toast.success('Notifications enabled')
+    } else if (permission === 'denied') {
+      toast.error('Notification permission denied')
+    }
   }
 </script>
 
@@ -49,6 +66,19 @@
         <Icon class="size-6" icon="ic:info"/>
         <span>Make sure that "Open links in apps" is enabled in your device settings.</span>
         <button class="btn btn-ghost btn-sm" onclick={() => active_alerts.value[Alerts.OPEN_LINKS] = false}>
+          <Icon icon="ic:close"/>
+        </button>
+      </div>
+    {/if}
+
+    {#if active_alerts.value[Alerts.NOTIFICATIONS]}
+      <div class="alert" role="alert">
+        <Icon class="size-6" icon="ic:info"/>
+        <span>Enable notifications to skip to next video easily.</span>
+        <button class="btn btn-success" onclick={enableNotifications}>
+          <Icon icon="ic:check"/>
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick={() => active_alerts.value[Alerts.NOTIFICATIONS] = false}>
           <Icon icon="ic:close"/>
         </button>
       </div>
