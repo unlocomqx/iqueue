@@ -13,7 +13,7 @@
 import { build, files, version } from '$service-worker';
 
 // This gives `self` the correct types
-const self = /** @type {ServiceWorkerGlobalScope} */ (/** @type {unknown} */ (globalThis.self));
+const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
@@ -72,7 +72,7 @@ self.addEventListener('fetch', (event) => {
         throw new Error('invalid response from fetch');
       }
 
-      if (response.status === 200) {
+      if (response.status === 200 && url.protocol.startsWith('http')) {
         cache.put(event.request, response.clone());
       }
 

@@ -3,10 +3,9 @@ import tailwindcss from '@tailwindcss/vite'
 import {defineConfig} from 'vitest/config'
 import {playwright} from '@vitest/browser-playwright'
 import {sveltekit} from '@sveltejs/kit/vite'
-import {SvelteKitPWA} from '@vite-pwa/sveltekit'
 
 export default defineConfig({
-  plugins: [tailwindcss(), sveltekit(), SvelteKitPWA(), devtoolsJson()],
+  plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
   test: {
     expect: {requireAssertions: true},
     projects: [
