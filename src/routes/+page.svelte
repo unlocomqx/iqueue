@@ -28,9 +28,36 @@
     }
   }
 
+  let deferredPrompt: any = null
+
   onMount(() => {
     active_alerts.value[Alerts.NOTIFICATIONS] = !('Notification' in window && Notification.permission === 'granted');
+
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches ||
+                       (window.navigator as any).standalone === true
+
+    active_alerts.value[Alerts.INSTALL_APP] = !isInstalled
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault()
+      deferredPrompt = e
+      active_alerts.value[Alerts.INSTALL_APP] = true
+    })
   })
+
+  async function installApp() {
+    if (!deferredPrompt) return
+
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+
+    if (outcome === 'accepted') {
+      active_alerts.value[Alerts.INSTALL_APP] = false
+      toast.success('App installed')
+    }
+
+    deferredPrompt = null
+  }
 
   async function showNotification(index: number) {
     if (Notification.permission !== 'granted') return
@@ -91,6 +118,19 @@
         <Icon class="size-6" icon="ic:info"/>
         <span>Make sure that "Open links in apps" is enabled in your device settings.</span>
         <button class="btn btn-ghost btn-sm" onclick={() => active_alerts.value[Alerts.OPEN_LINKS] = false}>
+          <Icon icon="ic:close"/>
+        </button>
+      </div>
+    {/if}
+
+    {#if active_alerts.value[Alerts.INSTALL_APP]}
+      <div class="alert" role="alert">
+        <Icon class="size-6" icon="ic:info"/>
+        <span>Install this app for a better experience.</span>
+        <button class="btn btn-success" onclick={installApp}>
+          <Icon icon="ic:check"/>
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick={() => active_alerts.value[Alerts.INSTALL_APP] = false}>
           <Icon icon="ic:close"/>
         </button>
       </div>
