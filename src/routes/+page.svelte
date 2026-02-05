@@ -4,6 +4,7 @@
   import {active_alerts, Alerts} from "$lib/store/alerts"
   import {toast} from "svelte-sonner"
   import {onMount} from "svelte"
+  import {page} from "$app/state"
 
   function removeItem(index: number) {
     queue.value = queue.value.filter((_, i) => i !== index)

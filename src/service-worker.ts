@@ -97,8 +97,16 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   if (event.notification.data?.url) {
+    let target_url = event.notification.data.url;
+
+    if (target_url.includes('youtube.com') || target_url.includes('youtu.be')) {
+      const url = new URL(target_url);
+      const videoId = url.searchParams.get('v') || url.pathname.split('/').pop();
+      target_url = `intent://youtube.com/watch?v=${videoId}#Intent;scheme=https;package=com.google.android.youtube;end`;
+    }
+
     event.waitUntil(
-      self.clients.openWindow(event.notification.data.url)
+      self.clients.openWindow(target_url)
     );
   }
 });
