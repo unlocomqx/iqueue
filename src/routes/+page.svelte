@@ -4,7 +4,6 @@
   import {active_alerts, Alerts} from "$lib/store/alerts"
   import {toast} from "svelte-sonner"
   import {onMount} from "svelte"
-  import {page} from "$app/state"
 
   function removeItem(index: number) {
     queue.value = queue.value.filter((_, i) => i !== index)
@@ -31,12 +30,12 @@
   let deferredPrompt: any = null
 
   onMount(() => {
-    active_alerts.value[Alerts.NOTIFICATIONS] = !('Notification' in window && Notification.permission === 'granted');
+    active_alerts.value[Alerts.NOTIFICATIONS] = !('Notification' in window && Notification.permission === 'granted')
 
     const isInstalled = window.matchMedia('(display-mode: standalone)').matches ||
-                       (window.navigator as any).standalone === true
+      (window.navigator as any).standalone === true
 
-    active_alerts.value[Alerts.INSTALL_APP] = !isInstalled
+    active_alerts.value[Alerts.INSTALL_APP] = active_alerts.value[Alerts.INSTALL_APP] && !isInstalled
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault()
@@ -49,7 +48,7 @@
     if (!deferredPrompt) return
 
     deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
+    const {outcome} = await deferredPrompt.userChoice
 
     if (outcome === 'accepted') {
       active_alerts.value[Alerts.INSTALL_APP] = false
@@ -71,7 +70,7 @@
       icon: '/favicon.png',
       tag: 'next-video',
       requireInteraction: true,
-      data: { url: nextVideo.url }
+      data: {url: nextVideo.url}
     })
   }
 </script>
