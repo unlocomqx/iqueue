@@ -58,11 +58,13 @@
     deferredPrompt = null
   }
 
-  async function showNotification(index: number) {
-    if (Notification.permission !== 'granted') return
-
+  async function handlePlayClick(index: number) {
     const nextVideo = queue.value[index + 1]
-    if (!nextVideo) return
+
+    // remove current video from queue
+    queue.value = queue.value.filter((_, i) => i !== index)
+
+    if (Notification.permission !== 'granted' || !nextVideo) return
 
     const registration = await navigator.serviceWorker.ready
     await registration.showNotification('Next video', {
@@ -91,7 +93,7 @@
             <div class="truncate">
               {item.title || item.url}
             </div>
-            <a onclick={() => showNotification(index)} href={item.url} target="_blank" rel="noopener noreferrer"
+            <a onclick={() => handlePlayClick(index)} href={item.url} target="_blank" rel="noopener noreferrer"
                class="btn btn-square btn-ghost">
               <Icon icon="ic:baseline-play-arrow"/>
             </a>
