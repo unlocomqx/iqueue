@@ -57,6 +57,7 @@
     }
     queue.value.push({title, url})
     toast.success('Video added to queue')
+    window.close()
   }
 
 </script>
