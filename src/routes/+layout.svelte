@@ -14,25 +14,24 @@
     add_link_to_queue(page.url.searchParams.get('title'), page.url.searchParams.get('text'))
   })
 
-  onMount(() => {
+  onMount(async () => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(registration => {
-        registration.addEventListener('updatefound', () => {
-          const new_worker = registration.installing
-          if (new_worker) {
-            new_worker.addEventListener('statechange', () => {
-              if (new_worker.state === 'installed' && navigator.serviceWorker.controller) {
-                toast('New version available', {
-                  action: {
-                    label: 'Reload',
-                    onClick: () => window.location.reload()
-                  },
-                  duration: Infinity
-                })
-              }
-            })
-          }
-        })
+      const registration = await navigator.serviceWorker.ready
+      registration.addEventListener('updatefound', () => {
+        const new_worker = registration.installing
+        if (new_worker) {
+          new_worker.addEventListener('statechange', () => {
+            if (new_worker.state === 'installed' && navigator.serviceWorker.controller) {
+              toast('New version available', {
+                action: {
+                  label: 'Reload',
+                  onClick: () => window.location.reload()
+                },
+                duration: Infinity
+              })
+            }
+          })
+        }
       })
     }
   })
