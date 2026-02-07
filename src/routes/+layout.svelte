@@ -11,10 +11,10 @@
     if(!page.url.searchParams.get('text')){
       return;
     }
-    addLinkToQueue(page.url.searchParams.get('title'), page.url.searchParams.get('text'))
+    add_link_to_queue(page.url.searchParams.get('title'), page.url.searchParams.get('text'))
   })
 
-  function addLinkToQueue(title: string | null, url: string | null) {
+  function add_link_to_queue(title: string | null, url: string | null) {
     if (!url) {
       toast.error('No URL provided')
       return
