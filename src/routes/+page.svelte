@@ -63,25 +63,40 @@
     deferred_prompt = null
   }
 
-  async function handle_play_click(index: number) {
+  async function handle_play_click(event: Event, index: number) {
+    event.preventDefault()
+
+    const current_video = queue.value[index]
     const next_video = queue.value[index + 1]
 
     // remove current video from queue
     queue.value = queue.value.filter((_, i) => i !== index)
 
-    if (Notification.permission !== 'granted' || !next_video) return
+    if (current_video) {
+      let target_url = current_video.url
 
-    const registration = await navigator.serviceWorker.ready
-    await registration.showNotification('Next video', {
-      body: next_video.title || next_video.url,
-      icon: '/favicon.png',
-      tag: 'next-video',
-      requireInteraction: true,
-      data: {
-        url: next_video.url,
-        youtubePackage: youtube_app.value
+      if (target_url.includes('youtube.com') || target_url.includes('youtu.be')) {
+        const url = new URL(target_url)
+        const video_id = url.searchParams.get('v') || url.pathname.split('/').pop()
+        target_url = `intent://youtube.com/watch?v=${video_id}#Intent;scheme=https;package=${youtube_app.value};end`
       }
-    })
+
+      window.open(target_url, '_blank')
+    }
+
+    if (Notification.permission === 'granted' && next_video) {
+      const registration = await navigator.serviceWorker.ready
+      await registration.showNotification('Next video', {
+        body: next_video.title || next_video.url,
+        icon: '/favicon.png',
+        tag: 'next-video',
+        requireInteraction: true,
+        data: {
+          url: next_video.url,
+          youtubePackage: youtube_app.value
+        }
+      })
+    }
   }
 </script>
 
@@ -101,7 +116,7 @@
             <div class="truncate">
               {item.title || item.url}
             </div>
-            <a onclick={() => handle_play_click(index)} href={item.url} target="_blank" rel="noopener noreferrer"
+            <a onclick={(e) => handle_play_click(e, index)} href={item.url} target="_blank" rel="noopener noreferrer"
                class="btn btn-square btn-ghost">
               <Icon icon="ic:baseline-play-arrow"/>
             </a>
