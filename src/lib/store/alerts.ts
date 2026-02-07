@@ -1,7 +1,6 @@
 import {LocalStore} from "$lib/store/persist.svelte"
 
 export enum Alerts {
-  OPEN_LINKS = 'open_links',
   NOTIFICATIONS = 'notifications',
   INSTALL_APP = 'install_app',
 }

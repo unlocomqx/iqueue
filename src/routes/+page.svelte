@@ -134,16 +134,6 @@
       </div>
     {/if}
 
-    {#if active_alerts.value[Alerts.OPEN_LINKS]}
-      <div class="alert" role="alert">
-        <Icon class="size-6" icon="ic:info"/>
-        <span>Make sure that "Open links in apps" is enabled in your device settings.</span>
-        <button class="btn btn-ghost btn-sm" onclick={() => active_alerts.value[Alerts.OPEN_LINKS] = false}>
-          <Icon icon="ic:close"/>
-        </button>
-      </div>
-    {/if}
-
     {#if active_alerts.value[Alerts.INSTALL_APP]}
       <div class="alert" role="alert">
         <Icon class="size-6" icon="ic:info"/>
