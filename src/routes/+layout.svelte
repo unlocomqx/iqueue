@@ -14,6 +14,29 @@
     add_link_to_queue(page.url.searchParams.get('title'), page.url.searchParams.get('text'))
   })
 
+  onMount(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(registration => {
+        registration.addEventListener('updatefound', () => {
+          const new_worker = registration.installing
+          if (new_worker) {
+            new_worker.addEventListener('statechange', () => {
+              if (new_worker.state === 'installed' && navigator.serviceWorker.controller) {
+                toast('New version available', {
+                  action: {
+                    label: 'Reload',
+                    onClick: () => window.location.reload()
+                  },
+                  duration: Infinity
+                })
+              }
+            })
+          }
+        })
+      })
+    }
+  })
+
   function add_link_to_queue(title: string | null, url: string | null) {
     if (!url) {
       toast.error('No URL provided')
