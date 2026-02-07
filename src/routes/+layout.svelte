@@ -16,7 +16,7 @@
 
   onMount(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      navigator.serviceWorker.ready.then(registration => {
         registration.addEventListener('updatefound', () => {
           const new_worker = registration.installing
           if (new_worker) {
