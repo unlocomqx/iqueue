@@ -2,7 +2,7 @@
 	"name": "iQueue",
 	"short_name": "iQueue",
 	"description": "A simple queue manager for YouTube videos",
-	"start_url": "/",
+	"start_url": "https://unlocomqx.github.io/iqueue/",
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#000000",
