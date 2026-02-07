@@ -32,7 +32,7 @@
 		}
 	],
 	"share_target": {
-		"action": "/",
+		"action": "/iqueue",
 		"method": "GET",
 		"params": {
 			"title": "title",
