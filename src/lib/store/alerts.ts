@@ -6,7 +6,6 @@ export enum Alerts {
 }
 
 export const active_alerts = new LocalStore<{ [key in Alerts]: boolean }>('alerts', {
-  [Alerts.OPEN_LINKS]: true,
   [Alerts.NOTIFICATIONS]: true,
   [Alerts.INSTALL_APP]: true,
 })
