@@ -112,7 +112,8 @@ self.addEventListener('notificationclick', (event) => {
     if (target_url.includes('youtube.com') || target_url.includes('youtu.be')) {
       const url = new URL(target_url);
       const videoId = url.searchParams.get('v') || url.pathname.split('/').pop();
-      target_url = `intent://youtube.com/watch?v=${videoId}#Intent;scheme=https;package=com.google.android.youtube;end`;
+      const youtubePackage = event.notification.data.youtubePackage || 'app.revanced.android.youtube';
+      target_url = `intent://youtube.com/watch?v=${videoId}#Intent;scheme=https;package=${youtubePackage};end`;
     }
 
     event.waitUntil(
