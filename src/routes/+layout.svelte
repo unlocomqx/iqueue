@@ -59,7 +59,7 @@
     queue.value.push({title, url})
     toast.success('Video added to queue')
 
-    if (Notification.permission === 'granted') {
+    if (Notification.permission === 'granted' && queue.value.length === 1) {
       const registration = await navigator.serviceWorker.ready
       await registration.showNotification('Next video', {
         body: title || url,
