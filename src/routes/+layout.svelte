@@ -4,6 +4,7 @@
   import {page} from '$app/state'
   import {queue} from "$lib/store/queue"
   import { Toaster, toast } from 'svelte-sonner'
+  import {youtube_app} from "$lib/store/settings"
 
   let {children} = $props()
 
@@ -36,7 +37,7 @@
     }
   })
 
-  function add_link_to_queue(title: string | null, url: string | null) {
+  async function add_link_to_queue(title: string | null, url: string | null) {
     if (!url) {
       toast.error('No URL provided')
       return
@@ -47,7 +48,7 @@
       return
     }
 
-    if(queue.value.some(item => item.url === url)){
+    if (queue.value.some(item => item.url === url)) {
       toast.info('Video already in queue')
       return
     }
@@ -57,6 +58,21 @@
     }
     queue.value.push({title, url})
     toast.success('Video added to queue')
+
+    if (Notification.permission === 'granted') {
+      const registration = await navigator.serviceWorker.ready
+      await registration.showNotification('Next video', {
+        body: title || url,
+        icon: '/favicon.png',
+        tag: 'next-video',
+        requireInteraction: true,
+        data: {
+          url,
+          youtubePackage: youtube_app.value
+        }
+      })
+    }
+
     window.close()
   }
 
