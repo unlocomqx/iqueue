@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"tunnel": "cloudflared tunnel --config ~/.cloudflared/iqueue-tunnel-config.yml run iqueue-tunnel",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
